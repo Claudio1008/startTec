@@ -1,130 +1,148 @@
-import { Curso } from "../model/Curso";
-import { Request, Response} from "express";
+// Importa as definições de Request e Response do Express
+import { Request, Response } from "express";
 
-/**
- * Interface LivroDTO
- * Define os atributos que devem ser recebidos do cliente nas requisições
- */
+// Importa a classe Curso do modelo correspondente
+import { Curso } from "../model/Curso";
+
+// Define a interface para representar os dados de um curso
 interface CursoDTO {
-    nome: string;
-    area: string;
-    cargaHoraria: string;
-    statusCurso: string
+    nome: string; // Nome do curso
+    area: string; // Área de conhecimento do curso
+    cargaHoraria: number; // Carga horária total do curso
 }
 
 /**
- * Controlador para operações relacionadas aos Livros.
-*/
-class CursoController extends Curso {
+ * Controlador para gerenciar as operações de Curso na API.
+ * Esta classe herda de `Curso` e implementa métodos para CRUD de cursos.
+ */
+export class CursoController extends Curso {
+
     /**
-     * Lista todos os livros.
-     * @param req Objeto de requisição HTTP.
-     * @param res Objeto de resposta HTTP.
-     * @returns Lista de livros em formato JSON.
+     * Lista todos os cursos disponíveis no sistema.
+     * @param req - Objeto da requisição HTTP.
+     * @param res - Objeto da resposta HTTP.
+     * @returns - Retorna a lista de cursos em formato JSON com status 200 ou uma mensagem de erro com status 400.
      */
     static async todos(req: Request, res: Response): Promise<any> {
         try {
-            const listaDeCursos = await Curso.listarCursos();
+            // Chama o método do modelo que retorna a listagem de cursos
+            const listaDeCursos = await Curso.listagemCursos();
 
-            res.status(200).json(listaDeCursos);
+            // Retorna a lista em formato JSON com status de sucesso
+            return res.status(200).json(listaDeCursos);
         } catch (error) {
-            console.log(`Erro ao acessar método herdado: ${error}`);
+            // Exibe erro no console para depuração
+            console.log('Erro ao acessar listagem de cursos:', error);
 
-            res.status(400).json("Erro ao recuperar as informações do Curso");
+            // Retorna erro 400 com mensagem apropriada
+            return res.status(400).json({ mensagem: "Não foi possível acessar a listagem de cursos" });
         }
     }
 
     /**
-     * Cadastra um novo livro.
-     * @param req Objeto de requisição HTTP com os dados do aluno.
-     * @param res Objeto de resposta HTTP.
-     * @returns Mensagem de sucesso ou erro em formato JSON.
+     * Cadastra um novo curso no sistema.
+     * @param req - Objeto da requisição contendo os dados do curso no corpo.
+     * @param res - Objeto da resposta HTTP.
+     * @returns - Retorna mensagem de sucesso ou erro com status apropriado.
      */
     static async novo(req: Request, res: Response): Promise<any> {
         try {
-            const dadosRecebidos: CursoDTO = req.body;
-            
-            // Instanciando objeto Livro
+            // Extrai os dados do curso do corpo da requisição
+            const cursoRecebido: CursoDTO = req.body;
+
+            // Cria uma nova instância de Curso com os dados recebidos
             const novoCurso = new Curso(
-                dadosRecebidos.nome,
-                dadosRecebidos.area, 
-                dadosRecebidos.cargaHoraria,
+                cursoRecebido.nome,         // Nome do curso
+                cursoRecebido.area,         // Área do curso
+                cursoRecebido.cargaHoraria  // Carga horária
             );
 
-            // Chama o método para persistir o livro no banco de dados
-            const result = await Curso.cadastrarCurso(novoCurso);
+            // Chama o método do modelo para cadastrar o curso
+            const respostaClasse = await Curso.cadastroCurso(novoCurso);
 
-            // Verifica se a query foi executada com sucesso
-            if (result) {
-                return res.status(200).json(`Curso cadastrado com sucesso`);
+            // Verifica se o cadastro foi bem-sucedido
+            if (respostaClasse) {
+                return res.status(200).json({ mensagem: "Curso cadastrado com sucesso!" });
             } else {
-                return res.status(400).json('Não foi possível cadastrar o Curso no banco de dados');
+                return res.status(400).json({ mensagem: "Erro ao cadastrar o Curso. Entre em contato com o administrador do sistema." });
             }
         } catch (error) {
-            console.log(`Erro ao cadastrar o Curso: ${error}`);
-            return res.status(400).json('Erro ao cadastrar o Curso');
+            // Loga o erro no console
+            console.log('Erro ao cadastrar Curso:', error);
+
+            // Retorna resposta de erro
+            return res.status(400).json({ mensagem: "Não foi possível cadastrar o Curso. Entre em contato com o administrador do sistema." });
         }
     }
 
-     /**
-     * Remove um aluno.
-     * @param req Objeto de requisição HTTP com o ID do aluno a ser removido.
-     * @param res Objeto de resposta HTTP.
-     * @returns Mensagem de sucesso ou erro em formato JSON.
-     */
-     static async remover(req: Request, res: Response): Promise<any> {
-        try {
-            const idCurso= parseInt(req.query.idCurso as string);
-            const result = await Curso.removerCurso(idCurso);
-            
-            if (result) {
-                return res.status(200).json('Curso removido com sucesso');
-            } else {
-                return res.status(401).json('Erro ao deletar Curso');
-            }
-        } catch (error) {
-            console.log("Erro ao remover o Curso");
-            console.log(error);
-            return res.status(500).send("error");
-        }
-    }
-    
     /**
-     * Método para atualizar o cadastro de um livro.
-     * 
-     * @param req Objeto de requisição do Express, contendo os dados atualizados do aluno
-     * @param res Objeto de resposta do Express
-     * @returns Retorna uma resposta HTTP indicando sucesso ou falha na atualização
+     * Remove um curso do sistema com base no ID fornecido.
+     * @param req - Objeto da requisição contendo o ID do curso como parâmetro.
+     * @param res - Objeto da resposta HTTP.
+     * @returns - Retorna mensagem de sucesso ou erro.
+     */
+    static async remover(req: Request, res: Response): Promise<any> {
+        try {
+            // Obtém o ID do curso a ser removido via parâmetro de rota
+            const idCurso = parseInt(req.params.idCurso);
+
+            // Chama o método de remoção no modelo
+            const respostaModelo = await Curso.removerCurso(idCurso);
+
+            // Verifica se a remoção foi bem-sucedida
+            if (respostaModelo) {
+                return res.status(200).json({ mensagem: "Curso removido com sucesso!" });
+            } else {
+                return res.status(400).json({ mensagem: "Erro ao remover o Curso. Entre em contato com o administrador do sistema." });
+            }
+        } catch (error) {
+            // Mostra erro no console (a interpolação aqui está incorreta, veja observação abaixo)
+            console.log('Erro ao remover um Curso. ${error}'); // ⚠️ Este log não exibirá corretamente o erro
+
+            // Retorna mensagem de erro
+            return res.status(400).json({ mensagem: "Erro ao remover o Curso. Entre em contato com o administrador do sistema." });
+        }
+    }
+
+    /**
+     * Atualiza os dados de um curso já existente.
+     * @param req - Objeto da requisição contendo o ID do curso e os novos dados.
+     * @param res - Objeto da resposta HTTP.
+     * @returns - Mensagem de sucesso ou erro com status HTTP adequado.
      */
     static async atualizar(req: Request, res: Response): Promise<any> {
         try {
-            const dadosRecebidos: CursoDTO = req.body;
-            
-            // Cria uma nova instância de Livro com os dados atualizados
-            const curso = new Curso(
-                dadosRecebidos.nome,
-                dadosRecebidos.area, 
-                dadosRecebidos.cargaHoraria
+            // Extrai o ID do curso da URL
+            const idCurso = parseInt(req.params.idCurso);
+
+            // Obtém os novos dados do corpo da requisição
+            const cursoRecebido: CursoDTO = req.body;
+
+            // Cria um objeto Curso com os novos dados
+            const cursoAtualizado = new Curso(
+                cursoRecebido.nome,
+                cursoRecebido.area,
+                cursoRecebido.cargaHoraria
             );
 
-            // Define o ID do livro, que deve ser passado na query string
-            Curso.setIdCurso(parseInt(req.query.idCurso as string));
+            // Define o ID do curso no objeto
+            cursoAtualizado.setIdCurso(idCurso);
 
-            // Chama o método para atualizar o cadastro do livro no banco de dados
-            if (await Curso.atualizarCadastroCurso(curso)) {
-                return res.status(200).json({ mensagem: "Cadastro atualizado com sucesso!" });
+            // Executa o método de atualização no modelo
+            const resposta = await Curso.atualizaCurso(cursoAtualizado);
+
+            // Verifica se a atualização foi realizada com sucesso
+            if (resposta) {
+                return res.status(200).json({ mensagem: "curso atualizado com sucesso!" }); // ⚠️ Inconsistência de capitalização
             } else {
-                return res.status(400).json('Não foi possível atualizar o livro no banco de dados');
+                return res.status(400).json({ mensagem: "Erro ao atualizar o curso. Entre em contato com o administrador do sistema." });
             }
         } catch (error) {
-            // Caso ocorra algum erro, este é registrado nos logs do servidor
-            console.error(`Erro no modelo: ${error}`);
-            // Retorna uma resposta com uma mensagem de erro
-            return res.json({ mensagem: "Erro ao atualizar aluno." });
+            // Exibe o erro para fins de debug
+            console.log(`Erro ao atualizar um curso. ${error}`);
+
+            // Retorna resposta de erro
+            return res.status(400).json({ mensagem: "Não foi possível atualizar o curso. Entre em contato com o administrador do sistema." });
         }
     }
 }
-
-export default CursoController;
-
-

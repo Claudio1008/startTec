@@ -1,6 +1,7 @@
 import { Request, Response, Router } from "express";
-import AlunoController from "./controller/AlunoController";
-import CursoController from "./controller/CursoController";
+import { AlunoController } from "./controller/AlunoController";
+import { CursoController } from "./controller/CursoController";
+import { MatriculaController } from "./controller/MatriculaController";
 // Cria um roteador
 const router = Router();
 
@@ -30,16 +31,16 @@ router.post("/novo/curso", CursoController.novo);
 router.put("/delete/curso/:idCurso", CursoController.remover);
 // Rota para atualizar um Vestuario
 router.put("/atualizar/curso/:idCurso", CursoController.atualizar);
-/*
+
 //ROTA DAS VENDAS
 
 // Rota para listar as vendas
-router.get("/lista/vendas", VendaController.todos);
+router.get("/lista/matriculas", MatriculaController.todos);
 // Rota para cadastrar uma venda
-router.post("/novo/venda", VendaController.novo);
+router.post("/novo/matricula", MatriculaController.novo);
 //Rota para deletar uma venda
-router.put("/delete/venda/:idVenda", VendaController.remover);
+router.put("/delete/matricula/:idmatricula", MatriculaController.remover);
 // Rota para atualizar uma venda
-router.put("/atualizar/venda/:idVenda", VendaController.atualizar);
-*/
+router.put("/atualizar/matricula/:idmatricula", MatriculaController.atualizar);
+
 export { router };
