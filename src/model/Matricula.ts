@@ -1,159 +1,95 @@
 import { DataBaseModel } from "./DataBaseModel";
 
+// Criação da conexão com o banco de dados
 const database = new DataBaseModel().pool;
+
 /**
- * classe que representa o Emprestimo
+ * Classe que representa uma matrícula de um aluno em um curso.
  */
 export class Matricula {
 
-    /* Atributos */
-    /* Identificador do Emprestimo */
-    private idMatricula: number = 0;
-    /* identificador do Aluno */
-    private idAluno: number;
-    /* identificador do Emprestimo */
-    private idCurso: number;
-    /* data do Emprestimo */
-    private dataMatricula: Date;
-    /* Status do Emprestimo */
-    private statusMatricula: string;
-    
+    /* Atributos privados da matrícula */
 
-     /**
-     * Construtor da classe Emprestimo
-     * @param idAluno id do Aluno
-     * @param idMatricula id do Emprestimo
-     * @param dataMatricula data do Emprestimo
-     * @param StatusMatricula Status do Emprestimo
+    private idMatricula: number = 0; // Identificador único da matrícula
+    private idAluno: number;         // Identificador do aluno
+    private idCurso: number;         // Identificador do curso
+    private dataMatricula: Date;     // Data da matrícula
+    private statusMatricula: string; // Status atual da matrícula (ativo, cancelado, etc.)
+
+    /**
+     * Construtor da classe Matricula.
+     * @param idAluno - ID do aluno matriculado
+     * @param idCurso - ID do curso da matrícula
+     * @param dataMatricula - Data de realização da matrícula
+     * @param statusMatricula - Status da matrícula (ex: "ativa", "cancelada")
      */
-    
-    
     constructor(
         idAluno: number,
         idCurso: number,
         dataMatricula: Date,
-        statusMatricula:string,
+        statusMatricula: string,
     ) {
         this.idAluno = idAluno;
         this.idCurso = idCurso;
         this.dataMatricula = dataMatricula;
         this.statusMatricula = statusMatricula;
     }
-    
-        /* Métodos get e set */
-    /**
-     * Recupera o identificador do Emprestimo
-     * @returns o identificador do Emprestimo
-     */
+
+    /* Getters e setters */
+
     public getIdMatricula(): number {
         return this.idMatricula;
     }
 
-    /**
-     * Atribui um Status ao identificador do Emprestimo
-     * @param idMatricula novo identificado do Emprestimo
-     */
     public setIdMatricula(idMatricula: number): void {
         this.idMatricula = idMatricula;
     }
 
-    /**
-     * Retorna o idAluno do Emprestimo.
-     *
-     * @returns {number} o idAluno do Emprestimo.
-     */
     public getidAluno(): number {
         return this.idAluno;
     }
-    
-    /**
-     * Define O idAluno do Emprestimo.
-     * 
-     * @param idAluno - o idAluno do Emprestimo a ser definido.
-     */
+
     public setidAluno(idAluno: number): void {
         this.idAluno = idAluno;
     }
 
-        /**
-     * Retorna o idEmprestimo do Emprestimo.
-     *
-     * @returns {number} o idEmprestimo do Emprestimo.
-     */
     public getidCurso(): number {
         return this.idCurso;
     }
-    
-    /**
-     * Define o idEmprestimo do Emprestimo.
-     * 
-     * @param idMatricula - o idEmprestimo do Emprestimo a ser definido.
-     */
+
     public setidCurso(idCurso: number): void {
         this.idCurso = idCurso;
     }
 
-    /**
-     * Retorna o data do Emprestimo.
-     *
-     * @returns {Date} o data do Emprestimo.
-     */
     public getdataMatricula(): Date {
         return this.dataMatricula;
     }
-    
-    /**
-     * Define o data do Emprestimo.
-     * 
-     * @param dataMatricula - o data do Emprestimo a ser definido.
-     */
+
     public setdataMatricula(dataMatricula: Date): void {
         this.dataMatricula = dataMatricula;
     }
 
-    /**
-     * Retorna o Status do Emprestimo.
-     *
-     * @returns {string} o Status do Emprestimo 
-     */
     public getStatusMatricula(): string {
         return this.statusMatricula;
     }
-    
-    /**
-     * Define o Status do Emprestimo.
-     * 
-     * @param StatusMatricula - o Status do Emprestimo a ser definido.
-     */
+
     public setStatusMatricula(statusMatricula: string): void {
         this.statusMatricula = statusMatricula;
     }
 
-
-
     /**
-     * Busca e retorna uma lista de Emprestimo do banco de dados.
-     * @returns Um array de objetos do tipo `Emprestimo` em caso de sucesso ou `null` se ocorrer um erro durante a consulta.
-     * 
-     * - A função realiza uma consulta SQL para obter todas as informações da tabela "Emprestimo".
-     * - Os dados retornados do banco de dados são usados para instanciar objetos da classe `Emprestimo`.
-     * - Cada Emprestimo é adicionado a uma lista que será retornada ao final da execução.
-     * - Se houver falha na consulta ao banco, a função captura o erro, exibe uma mensagem no console e retorna `null`.
+     * Retorna todas as matrículas do banco de dados.
+     * @returns Lista de objetos `Matricula` ou `null` em caso de erro.
      */
     static async listarMatricula(): Promise<Array<Matricula> | null> {
-        // objeto para armazenar a lista de Emprestimo
         const listaDeMatricula: Array<Matricula> = [];
 
         try {
-            // query de consulta ao banco de dados
             const querySelectMatricula = `SELECT * FROM Emprestimo;`;
 
-            // fazendo a consulta e guardando a resposta
             const respostaBD = await database.query(querySelectMatricula);
 
-            // usando a resposta para instanciar um objeto do tipo Emprestimo
             respostaBD.rows.forEach((linha) => {
-                // instancia (cria) objeto Emprestimo
                 const novoMatricula = new Matricula(
                     linha.id_aluno,
                     linha.id_curso,
@@ -161,14 +97,10 @@ export class Matricula {
                     linha.status_matricula
                 );
 
-                // atribui o ID objeto
                 novoMatricula.setIdMatricula(linha.id_matricula);
-
-                // adiciona o objeto na lista
                 listaDeMatricula.push(novoMatricula);
             });
 
-            // retorna a lista de Emprestimo
             return listaDeMatricula;
         } catch (error) {
             console.log('Erro ao buscar lista de Matricula');
@@ -177,24 +109,12 @@ export class Matricula {
     }
 
     /**
-     * Realiza o cadastro de um Emprestimo no banco de dados.
-     * 
-     * Esta função recebe um objeto do tipo `Emprestimo` e insere seus dados (isbn, modelo, ano e cor)
-     * na tabela `Emprestimo` do banco de dados. O método retorna um valor booleano indicando se o cadastro 
-     * foi realizado com sucesso.
-     * 
-     * @param {Matricula} Matricula - Objeto contendo os dados do Emprestimo que será cadastrado. O objeto `Emprestimo`
-     *                        deve conter os métodos `getTitulo()`, `getAutor()`, `getAnoPublicacao()` e `getIsbn()`
-     *                        que retornam os respectivos valores do Emprestimo.
-     * @returns {Promise<boolean>} - Retorna `true` se o Emprestimo foi cadastrado com sucesso e `false` caso contrário.
-     *                               Em caso de erro durante o processo, a função trata o erro e retorna `false`.
-     * 
-     * @throws {Error} - Se ocorrer algum erro durante a execução do cadastro, uma mensagem de erro é exibida
-     *                   no console junto com os detalhes do erro.
+     * Cadastra uma nova matrícula no banco de dados.
+     * @param Matricula - Objeto de matrícula a ser inserido.
+     * @returns `true` se cadastrada com sucesso, `false` caso contrário.
      */
     static async cadastroMatricula(Matricula: Matricula): Promise<boolean> {
         try {
-            // query para fazer insert de um Emprestimo no banco de dados
             const querySelectMatricula = `INSERT INTO Matricula (idMatricula, idAluno, idCurso ,dataMatricula, statusMatricula)
                                         VALUES
                                         (
@@ -205,56 +125,54 @@ export class Matricula {
                                         '${Matricula.getStatusMatricula}',
                                         RETURNING id_matricula`;
 
-            // executa a query no banco e armazena a resposta
             const respostaBD = await database.query(querySelectMatricula);
 
-            // verifica se a quantidade de linhas modificadas é diferente de 0
             if (respostaBD.rowCount != 0) {
-                console.log(`Emprestimo cadastrado com sucesso! ID do matricula: ${respostaBD.rows[0].id_matricula}`);
-                // true significa que o cadastro foi feito
+                console.log(`Matricula cadastrada com sucesso! ID: ${respostaBD.rows[0].id_matricula}`);
                 return true;
             }
-            // false significa que o cadastro NÃO foi feito.
+
             return false;
 
-            // tratando o erro
         } catch (error) {
-            // imprime outra mensagem junto com o erro
             console.log('Erro ao cadastrar a matricula. Verifique os logs para mais detalhes.');
-            // imprime o erro no console
             console.log(error);
-            // retorno um valor falso
             return false;
         }
     }
 
+    /**
+     * Remove uma matrícula do banco de dados.
+     * @param idMatricula - ID da matrícula a ser removida.
+     * @returns `true` se removida com sucesso, `false` caso contrário.
+     */
     static async removerMatricula(idMatricula: number): Promise<boolean> {
         try {
             const queryDeleteMatricula = `DELETE FROM Matricula WHERE id_matricula = ${idMatricula}`;
 
             const respostaBD = await database.query(queryDeleteMatricula);
 
-            if(respostaBD.rowCount != 0) {
-                console.log(`Matricula removido com sucesso!. ID removido: ${idMatricula}`);
-
+            if (respostaBD.rowCount != 0) {
+                console.log(`Matricula removida com sucesso! ID: ${idMatricula}`);
                 return true;
             }
 
             return false;
 
         } catch (error) {
-
-            console.log(`erro ao remover Matricula registrada . verifique os logs para mais detalhes,`);
-
+            console.log(`Erro ao remover Matricula. Verifique os logs para mais detalhes.`);
             console.log(error);
-
             return false;
         }
     }
 
+    /**
+     * Atualiza os dados de uma matrícula existente.
+     * @param matricula - Objeto com os novos dados.
+     * @returns `true` se atualizada com sucesso, `false` caso contrário.
+     */
     static async atualizarMatricula(matricula: Matricula): Promise<boolean> {
         try {
-            // query para fazer update de um Emprestimo no banco de dados
             const queryUpdateMatricula = `UPDATE Matricula
                                         SET 
                                         id_aluno = '${matricula.getidAluno()}',
@@ -263,25 +181,18 @@ export class Matricula {
                                         status_matricula = '${matricula.getStatusMatricula()}'
                                         WHERE id_matricula = ${matricula.getIdMatricula()};`;
 
-            // executa a query no banco e armazena a resposta
             const respostaBD = await database.query(queryUpdateMatricula);
 
-            // verifica se a quantidade de linhas modificadas é diferente de 0
             if (respostaBD.rowCount != 0) {
-                console.log(`Matricula atualizado com sucesso! ID da Matricula: ${matricula.getIdMatricula()}`);
-                // true significa que a atualização foi bem sucedida
+                console.log(`Matricula atualizada com sucesso! ID: ${matricula.getIdMatricula()}`);
                 return true;
             }
-            // false significa que a atualização NÃO foi bem sucedida.
+
             return false;
 
-            // tratando o erro
         } catch (error) {
-            // imprime outra mensagem junto com o erro
             console.log('Erro ao atualizar a Matricula. Verifique os logs para mais detalhes.');
-            // imprime o erro no console
             console.log(error);
-            // retorno um valor falso
             return false;
         }
     }
