@@ -39,8 +39,8 @@ router.get("/lista/matriculas", MatriculaController.todos);
 // Rota para cadastrar uma venda
 router.post("/novo/matricula", MatriculaController.novo);
 //Rota para deletar uma venda
-router.put("/delete/matricula/:idmatricula", MatriculaController.remover);
+router.delete("/delete/matricula/:idMatricula", MatriculaController.remover);
 // Rota para atualizar uma venda
-router.put("/atualizar/matricula/:idmatricula", MatriculaController.atualizar);
+router.put("/atualizar/matricula/:idMatricula", MatriculaController.atualizar);
 
 export { router };

@@ -20,7 +20,7 @@ id_matricula SERIAL PRIMARY KEY,
 id_aluno INT NOT NULL REFERENCES Aluno(id_aluno),
 id_curso INT NOT NULL REFERENCES Curso(id_curso),
 data_matricula DATE,
-status_matricula BOOLEAN DEFAULT ATIVA
+status_matricula VARCHAR(15) NOT NULL
 );
 
 CREATE TABLE Usuario (

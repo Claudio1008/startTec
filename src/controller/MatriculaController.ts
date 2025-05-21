@@ -99,7 +99,7 @@ export class MatriculaController extends Matricula {
     static async atualizar(req: Request, res: Response): Promise<any> {
         try {
             // Recupera o ID da matrícula a ser atualizada
-            const idMatricula = parseInt(req.params.idMatricula as string);
+            const idMatricula = parseInt(req.params.idMatricula);
 
             // Recupera os novos dados da matrícula
             const matriculaRecebido: MatriculaDTO = req.body;
@@ -122,11 +122,11 @@ export class MatriculaController extends Matricula {
             if (resposta) {
                 return res.status(200).json({ mensagem: "Matricula atualizado com sucesso!" });
             } else {
-                return res.status(400).json({ mensagem: "Erro ao atualizar o Matricula. Entre em contato com o administrador do sistema." });
+                return res.status(400).json({ mensagem: "Erro ao atualizar a Matricula. Entre em contato com o administrador do sistema." });
             }
         } catch (error) {
-            console.log(`Erro ao atualizar um Matricula. ${error}`);
-            return res.status(400).json({ mensagem: "Não foi possível atualizar o Matricula. Entre em contato com o administrador do sistema." });
+            console.log(`Erro ao atualizar a Matricula. ${error}`);
+            return res.status(400).json({ mensagem: "Não foi possível atualizar a Matricula. Entre em contato com o administrador do sistema." });
         }
     }
 }

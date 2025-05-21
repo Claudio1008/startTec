@@ -1,0 +1,259 @@
+{
+	"info": {
+		"_postman_id": "aaf102bd-b7a8-46b9-b44e-9202ce7b4944",
+		"name": "STARTTEC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38148704"
+	},
+	"item": [
+		{
+			"name": "ALUNO",
+			"item": [
+				{
+					"name": "LISTA ALUNOS",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nomeInteiro\": \"klebson\",\r\n    \"cpf\": 45678904433,\r\n    \"email\": \"klebsonnnn@email.com\",\r\n    \"dataNascimento\": \"10-10-2000\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3333/lista/alunos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"lista",
+								"alunos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CADASTRO ALUNO",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nomeInteiro\": \"Juliana\",\r\n    \"cpf\": 48899776809,\r\n    \"email\": \"juliana.sophia.caldeira@estadao.com.br\",\r\n    \"celular\": \"64987597748\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/novo/aluno",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"novo",
+								"aluno"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE ALUNO",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cpf\": \"48899776000\",\r\n    \"email\": \"juliana.sophia@estadao.com.br\",\r\n    \"celular\": \"64987591748\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/atualizar/aluno/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"atualizar",
+								"aluno",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE ALUNO",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CURSO",
+			"item": [
+				{
+					"name": "LISTA CURSOS",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "CADASTRO CURSO",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3333/novo/curso",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"novo",
+								"curso"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE CURSO",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE CURSO",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "MATRICULA",
+			"item": [
+				{
+					"name": "LISTAR MATRICULAS",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "CADASTRO MATRICULA",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idAluno\": 3,\r\n    \"idCurso\": 1,\r\n    \"dataMatricula\": \"2024-03-03\",\r\n    \"statusMatricula\": \"ativa\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/novo/matricula",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"novo",
+								"matricula"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ATUALIZAR MATRICULA",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idAluno\": 3,\r\n    \"idCurso\": 1,\r\n    \"dataMatricula\": \"2024-03-03\",\r\n    \"statusMatricula\": \"desativada\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/atualizar/matricula/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"atualizar",
+								"matricula",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE MATRICULA",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"idAluno\": 3,\r\n    \"idCurso\": 1,\r\n    \"dataMatricula\": \"2024-03-03\",\r\n    \"statusMatricula\": \"desativada\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3333/delete/matricula/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"delete",
+								"matricula",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -45,27 +45,27 @@ export class Matricula {
         this.idMatricula = idMatricula;
     }
 
-    public getidAluno(): number {
+    public getIdAluno(): number {
         return this.idAluno;
     }
 
-    public setidAluno(idAluno: number): void {
+    public setIdAluno(idAluno: number): void {
         this.idAluno = idAluno;
     }
 
-    public getidCurso(): number {
+    public getIdCurso(): number {
         return this.idCurso;
     }
 
-    public setidCurso(idCurso: number): void {
+    public setIdCurso(idCurso: number): void {
         this.idCurso = idCurso;
     }
 
-    public getdataMatricula(): Date {
+    public getDataMatricula(): Date {
         return this.dataMatricula;
     }
 
-    public setdataMatricula(dataMatricula: Date): void {
+    public setDataMatricula(dataMatricula: Date): void {
         this.dataMatricula = dataMatricula;
     }
 
@@ -85,7 +85,7 @@ export class Matricula {
         const listaDeMatricula: Array<Matricula> = [];
 
         try {
-            const querySelectMatricula = `SELECT * FROM Emprestimo;`;
+            const querySelectMatricula = `SELECT * FROM Matricula;`;
 
             const respostaBD = await database.query(querySelectMatricula);
 
@@ -115,14 +115,13 @@ export class Matricula {
      */
     static async cadastroMatricula(Matricula: Matricula): Promise<boolean> {
         try {
-            const querySelectMatricula = `INSERT INTO Matricula (idMatricula, idAluno, idCurso ,dataMatricula, statusMatricula)
+            const querySelectMatricula = `INSERT INTO Matricula (id_aluno, id_curso ,data_matricula, status_matricula)
                                         VALUES
                                         (
-                                        '${Matricula.getIdMatricula()}', 
-                                        '${Matricula.getidAluno()}',
-                                        '${Matricula.getidCurso()}', 
-                                        '${Matricula.getdataMatricula()}, 
-                                        '${Matricula.getStatusMatricula}',
+                                        '${Matricula.getIdAluno()}',
+                                        '${Matricula.getIdCurso()}', 
+                                        '${Matricula.getDataMatricula()}', 
+                                        '${Matricula.getStatusMatricula()}')
                                         RETURNING id_matricula`;
 
             const respostaBD = await database.query(querySelectMatricula);
@@ -166,33 +165,38 @@ export class Matricula {
         }
     }
 
-    /**
-     * Atualiza os dados de uma matrícula existente.
-     * @param matricula - Objeto com os novos dados.
-     * @returns `true` se atualizada com sucesso, `false` caso contrário.
-     */
     static async atualizarMatricula(matricula: Matricula): Promise<boolean> {
         try {
-            const queryUpdateMatricula = `UPDATE Matricula
-                                        SET 
-                                        id_aluno = '${matricula.getidAluno()}',
-                                        id_curso = '${matricula.getidCurso()}', 
-                                        data_matricula = '${matricula.getdataMatricula()}', 
-                                        status_matricula = '${matricula.getStatusMatricula()}'
-                                        WHERE id_matricula = ${matricula.getIdMatricula()};`;
+            // Monta a query SQL para atualizar os dados da venda no banco de dados
+            const queryUpdateMatricula = `
+                UPDATE Matricula SET
+                id_aluno = ${matricula.getIdAluno()},
+                id_curso = ${matricula.getIdCurso()},
+                data_matricula = '${matricula.getDataMatricula()}',
+                status_matricula = '${matricula.getStatusMatricula()}'
+                WHERE id_matricula = ${matricula.getIdMatricula()};`;
 
+            console.log(queryUpdateMatricula)
+
+            // Executa a query no banco e armazena a resposta
             const respostaBD = await database.query(queryUpdateMatricula);
 
+            // verifica se a quantidade de linhas modificadas é diferente de 0
             if (respostaBD.rowCount != 0) {
-                console.log(`Matricula atualizada com sucesso! ID: ${matricula.getIdMatricula()}`);
+                console.log(`Matricula atualizado com sucesso! ID do Pedido: ${matricula.getIdMatricula()}`);
+                // true significa que a atualização foi bem sucedida
                 return true;
             }
-
+            // false significa que a atualização NÃO foi bem sucedida.
             return false;
 
+            // tratando o erro
         } catch (error) {
+            // imprime outra mensagem junto com o erro
             console.log('Erro ao atualizar a Matricula. Verifique os logs para mais detalhes.');
+            // imprime o erro no console
             console.log(error);
+            // retorno um valor falso
             return false;
         }
     }
