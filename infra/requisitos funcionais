@@ -1,0 +1,14 @@
+Requisitos Funcionais
+RF001	Listar Alunos
+RF002	Cadastrar Aluno
+RF003	Atualizar Aluno
+RF004	Excluir Aluno
+RF005	Listar Cursos
+RF006	Cadastrar Curso
+RF007	Atualizar Curso
+RF008	Excluir Curso
+RF009	Listar Matricula
+RF010	Cadastrar Matricula
+RF011	Atualizar Matricula
+RF012	Excluir Matricula
+Tabela 1- Requisitos Funcionais
